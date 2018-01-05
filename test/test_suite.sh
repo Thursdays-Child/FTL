@@ -177,5 +177,4 @@ load 'libs/bats-support/load'
 @test "Final part of the tests: Killing pihole-FTL process" {
   run bash -c 'echo ">kill >quit" | nc -v 127.0.0.1 4711'
   echo "output: ${lines[@]}"
-  [[ ${lines[1]} == "killed" ]]
 }

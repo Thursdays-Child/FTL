@@ -4,7 +4,7 @@ load 'libs/bats-support/load'
 # load 'libs/bats-assert/load'
 
 @test "Version" {
-  run bash -c 'echo ">version" | nc -v 127.0.0.1 4711'
+  run bash -c 'echo ">version >quit" | nc -v 127.0.0.1 4711'
   echo "output: ${lines[@]}"
   [[ ${lines[0]} == "Connection to 127.0.0.1 4711 port [tcp/*] succeeded!" ]]
   [[ ${lines[1]} =~ "version" ]]
@@ -15,7 +15,7 @@ load 'libs/bats-support/load'
 }
 
 @test "Statistics" {
-  run bash -c 'echo ">stats" | nc -v 127.0.0.1 4711'
+  run bash -c 'echo ">stats >quit" | nc -v 127.0.0.1 4711'
   echo "output: ${lines[@]}"
   [[ ${lines[0]} == "Connection to 127.0.0.1 4711 port [tcp/*] succeeded!" ]]
   [[ ${lines[1]} =~ "domains_being_blocked -1" ]]
@@ -32,7 +32,7 @@ load 'libs/bats-support/load'
 }
 
 @test "Top Clients" {
-  run bash -c 'echo ">top-clients" | nc -v 127.0.0.1 4711'
+  run bash -c 'echo ">top-clients >quit" | nc -v 127.0.0.1 4711'
   echo "output: ${lines[@]}"
   [[ ${lines[0]} == "Connection to 127.0.0.1 4711 port [tcp/*] succeeded!" ]]
   [[ ${lines[1]} =~ "0 4 192.168.2.208" ]]
@@ -42,7 +42,7 @@ load 'libs/bats-support/load'
 }
 
 @test "Top Domains" {
-  run bash -c 'echo ">top-domains" | nc -v 127.0.0.1 4711'
+  run bash -c 'echo ">top-domains >quit" | nc -v 127.0.0.1 4711'
   echo "output: ${lines[@]}"
   [[ ${lines[0]} == "Connection to 127.0.0.1 4711 port [tcp/*] succeeded!" ]]
   [[ ${lines[1]} == "0 2 play.google.com" ]]
@@ -53,7 +53,7 @@ load 'libs/bats-support/load'
 }
 
 @test "Top Ads" {
-  run bash -c 'echo ">top-ads" | nc -v 127.0.0.1 4711'
+  run bash -c 'echo ">top-ads >quit" | nc -v 127.0.0.1 4711'
   echo "output: ${lines[@]}"
   [[ ${lines[0]} == "Connection to 127.0.0.1 4711 port [tcp/*] succeeded!" ]]
   [[ ${lines[1]} == "0 1 addomain.com" ]]
@@ -62,7 +62,7 @@ load 'libs/bats-support/load'
 }
 
 @test "Over Time" {
-  run bash -c 'echo ">overTime" | nc -v 127.0.0.1 4711'
+  run bash -c 'echo ">overTime >quit" | nc -v 127.0.0.1 4711'
   echo "output: ${lines[@]}"
   [[ ${lines[0]} == "Connection to 127.0.0.1 4711 port [tcp/*] succeeded!" ]]
   [[ ${lines[1]} =~ "7 2" ]]
@@ -70,7 +70,7 @@ load 'libs/bats-support/load'
 }
 
 @test "Forward Destinations" {
-  run bash -c 'echo ">forward-dest" | nc -v 127.0.0.1 4711'
+  run bash -c 'echo ">forward-dest >quit" | nc -v 127.0.0.1 4711'
   echo "output: ${lines[@]}"
   [[ ${lines[0]} == "Connection to 127.0.0.1 4711 port [tcp/*] succeeded!" ]]
   [[ ${lines[1]} =~ "0 57.14 ::1 local" ]]
@@ -82,7 +82,7 @@ load 'libs/bats-support/load'
 }
 
 @test "Forward Destinations (unsorted)" {
-  run bash -c 'echo ">forward-dest unsorted" | nc -v 127.0.0.1 4711'
+  run bash -c 'echo ">forward-dest unsorted >quit" | nc -v 127.0.0.1 4711'
   echo "output: ${lines[@]}"
   [[ ${lines[0]} == "Connection to 127.0.0.1 4711 port [tcp/*] succeeded!" ]]
   [[ ${lines[1]} =~ "0 9.52 2001:1608:10:25::9249:d69b" ]]
@@ -94,7 +94,7 @@ load 'libs/bats-support/load'
 }
 
 @test "Query Types" {
-  run bash -c 'echo ">querytypes" | nc -v 127.0.0.1 4711'
+  run bash -c 'echo ">querytypes >quit" | nc -v 127.0.0.1 4711'
   echo "output: ${lines[@]}"
   [[ ${lines[0]} == "Connection to 127.0.0.1 4711 port [tcp/*] succeeded!" ]]
   [[ ${lines[1]} == "A (IPv4): 71.43" ]]
@@ -103,7 +103,7 @@ load 'libs/bats-support/load'
 }
 
 @test "Get all queries" {
-  run bash -c 'echo ">getallqueries" | nc -v 127.0.0.1 4711'
+  run bash -c 'echo ">getallqueries >quit" | nc -v 127.0.0.1 4711'
   echo "output: ${lines[@]}"
   [[ ${lines[0]} == "Connection to 127.0.0.1 4711 port [tcp/*] succeeded!" ]]
   [[ ${lines[1]} =~ "IPv6 raspberrypi" ]]
@@ -117,7 +117,7 @@ load 'libs/bats-support/load'
 }
 
 @test "Get all queries (domain filtered)" {
-  run bash -c 'echo ">getallqueries-domain play.google.com" | nc -v 127.0.0.1 4711'
+  run bash -c 'echo ">getallqueries-domain play.google.com >quit" | nc -v 127.0.0.1 4711'
   echo "output: ${lines[@]}"
   [[ ${lines[0]} == "Connection to 127.0.0.1 4711 port [tcp/*] succeeded!" ]]
   [[ ${lines[1]} =~ "IPv4 play.google.com" ]]
@@ -126,7 +126,7 @@ load 'libs/bats-support/load'
 }
 
 @test "Get all queries (domain + number filtered)" {
-  run bash -c 'echo ">getallqueries-domain play.google.com (3)" | nc -v 127.0.0.1 4711'
+  run bash -c 'echo ">getallqueries-domain play.google.com (3) >quit" | nc -v 127.0.0.1 4711'
   echo "output: ${lines[@]}"
   [[ ${lines[0]} == "Connection to 127.0.0.1 4711 port [tcp/*] succeeded!" ]]
   [[ ${lines[1]} =~ "IPv6 play.google.com" ]]
@@ -134,7 +134,7 @@ load 'libs/bats-support/load'
 }
 
 @test "Get all queries (client filtered)" {
-  run bash -c 'echo ">getallqueries-client 127.0.0.1" | nc -v 127.0.0.1 4711'
+  run bash -c 'echo ">getallqueries-client 127.0.0.1 >quit" | nc -v 127.0.0.1 4711'
   echo "output: ${lines[@]}"
   [[ ${lines[0]} == "Connection to 127.0.0.1 4711 port [tcp/*] succeeded!" ]]
   [[ ${lines[1]} =~ "IPv6 raspberrypi" ]]
@@ -143,7 +143,7 @@ load 'libs/bats-support/load'
 }
 
 @test "Get all queries (client + number filtered)" {
-  run bash -c 'echo ">getallqueries-client 127.0.0.1 (6)" | nc -v 127.0.0.1 4711'
+  run bash -c 'echo ">getallqueries-client 127.0.0.1 (6) >quit" | nc -v 127.0.0.1 4711'
   echo "output: ${lines[@]}"
   [[ ${lines[0]} == "Connection to 127.0.0.1 4711 port [tcp/*] succeeded!" ]]
   [[ ${lines[1]} =~ "IPv4 checkip.dyndns.org" ]]
@@ -151,7 +151,7 @@ load 'libs/bats-support/load'
 }
 
 @test "Memory" {
-  run bash -c 'echo ">memory" | nc -v 127.0.0.1 4711'
+  run bash -c 'echo ">memory >quit" | nc -v 127.0.0.1 4711'
   echo "output: ${lines[@]}"
   [[ ${lines[0]} == "Connection to 127.0.0.1 4711 port [tcp/*] succeeded!" ]]
   [[ ${lines[1]} =~ "memory allocated for internal data structure:" ]]
@@ -161,14 +161,14 @@ load 'libs/bats-support/load'
 }
 
 @test "Get client ID" {
-  run bash -c 'echo ">clientID" | nc -v 127.0.0.1 4711'
+  run bash -c 'echo ">clientID >quit" | nc -v 127.0.0.1 4711'
   echo "output: ${lines[@]}"
   [[ ${lines[0]} == "Connection to 127.0.0.1 4711 port [tcp/*] succeeded!" ]]
   [[ ${lines[2]} == "---EOM---" ]]
 }
 
 @test "Recent blocked" {
-  run bash -c 'echo ">recentBlocked" | nc -v 127.0.0.1 4711'
+  run bash -c 'echo ">recentBlocked >quit" | nc -v 127.0.0.1 4711'
   echo "output: ${lines[@]}"
   [[ ${lines[0]} == "Connection to 127.0.0.1 4711 port [tcp/*] succeeded!" ]]
   [[ ${lines[1]} == "addomain.com" ]]
@@ -215,7 +215,7 @@ load 'libs/bats-support/load'
 }
 
 @test "Final part of the tests: Killing pihole-FTL process" {
-  run bash -c 'echo ">kill" | nc -v 127.0.0.1 4711'
+  run bash -c 'echo ">kill >quit" | nc -v 127.0.0.1 4711'
   echo "output: ${lines[@]}"
   [[ ${lines[0]} == "Connection to 127.0.0.1 4711 port [tcp/*] succeeded!" ]]
   [[ ${lines[1]} == "killed" ]]

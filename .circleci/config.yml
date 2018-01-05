@@ -34,7 +34,7 @@ version: 2
           [[ "$CIRCLE_PR_NUMBER" == "" ]] && ./FTL-client "${CIRCLE_BRANCH}" "${BIN_NAME}" "${FTL_SECRET}"
           [[ "$CIRCLE_PR_NUMBER" == "" ]] && ./FTL-client "${CIRCLE_BRANCH}" "${BIN_NAME}.sha1" "${FTL_SECRET}"
           rm ./FTL-client
-          ls -lah "${DEST_DIR}"
+          ls -lah .
 
 jobs:
   arm:

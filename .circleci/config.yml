@@ -17,7 +17,7 @@ version: 2
     - run:
         name: "Build"
         command: |
-          make CC="${BUILD_CC}" CFLAGS="${CFLAGS}"
+          make CC="${BUILD_CC}" CFLAGS="${CFLAGS}" GIT_BRANCH="${CIRCLE_BRANCH}" GIT_TAG="${CIRCLE_TAG}"
           file pihole-FTL
     - run:
         name: "Test"

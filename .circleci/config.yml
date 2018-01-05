@@ -4,7 +4,7 @@ version: 2
   docker:
     - image: "japaric/$TARGET:v0.1.14"
       environment:
-        - DEST_DIR: "${HOME}/FTL"
+        - DEST_DIR: "FTL"
   steps:
     - checkout
     - run:

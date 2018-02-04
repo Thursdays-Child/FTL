@@ -3,18 +3,24 @@
 *  Network-wide ad blocking via your own hardware.
 *
 *  FTL Engine
-*  Global definitions
+*  Global definitions - main.h
 *
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */
 
 
-// The beginning of the FTL.h program execution
-// FTL.h fields database data I/O requests via an API
 //
-// Program instructions are repeatedly scanned by a C interpreter
-// fed to the processing bus for the hardware to schedule for work  
-// processor time / provide results: calculations, conditionals, etc
+// The beginning of the FTL program
+// FTL.h is the base of the FTL.c code 
+// FTL.c fields database data I/O requests via an API
+//
+// Program instructions are repeatedly scanned by a C interpreter, commands are
+// fed to the processing bus for the hardware to schedule for work / processor time,
+// provides results to other portions of the pi-hole project: performing calculations, 
+// storing / retrieving / maniuplating data, deciding on conditionals, user interface, etc
+//
+// These functions utilize the sqlite3.h to provide SQLite3 database functionality, and 
+// a wide variety of operating system, data handling, and networking function.h includes
 
 
 // #define _KEYWORD

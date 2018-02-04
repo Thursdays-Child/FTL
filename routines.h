@@ -8,6 +8,7 @@
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */
 
+// called conditionally within <main.c>, code at <daemon.c>
 void go_daemon(void);
 void timer_start(void);
 float timer_elapsed_msec(void);

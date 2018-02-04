@@ -8,6 +8,7 @@
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */
 
+// This is the third 'step' of the FTL program, executes after the code in FTL.h:
 #include "FTL.h"
 
 char * username;

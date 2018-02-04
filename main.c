@@ -8,6 +8,7 @@
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */
 
+// First step of FTL program - stdio.h, routine.h, etc via FTL.h:
 #include "FTL.h"
 
 char * username;

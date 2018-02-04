@@ -8,8 +8,19 @@
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */
 
+
+// The beginning of the FTL.h program execution
+// FTL.h fields database data I/O requests via an API
+//
+// Program instructions are repeatedly scanned by a C interpreter
+// fed to the processing bus for the hardware to schedule for work  
+// processor time / provide results: calculations, conditionals, etc
+
+
+// #define _KEYWORD
 #define __USE_XOPEN
 #define _GNU_SOURCE
+// #include <code.h>
 #include <stdio.h>
 // variable argument lists
 #include <stdarg.h>
@@ -46,8 +57,9 @@
 #include <ifaddrs.h>
 #include <net/if.h>
 
-
+// "Program Functions" / main.h's main.h?
 #include "routines.h"
+
 
 // Next we define the step size in which the struct arrays are reallocated if they
 // grow too large. This number should be large enough so that reallocation does not
@@ -57,8 +69,9 @@
 #define CLIENTSALLOCSTEP 10
 #define DOMAINSALLOCSTEP 1000
 #define OVERTIMEALLOCSTEP 100
-
+//
 #define SOCKETBUFFERLEN 1024
+
 
 // How often do we garbage collect (to ensure we only have data fitting to the MAXLOGAGE defined above)? [seconds]
 // Default: 3600 (once per hour)
@@ -71,7 +84,10 @@
 // How many client connection do we accept at once?
 #define MAXCONNS 20
 
+
 // Static structs
+//
+//
 typedef struct {
 	const char* conf;
 	const char* log;
@@ -81,6 +97,7 @@ typedef struct {
 	const char* socketfile;
 } FTLFileNamesStruct;
 
+//
 typedef struct {
 	const char* log;
 	const char* gravity;
@@ -92,6 +109,7 @@ typedef struct {
 	const char* dnsmasqconfig;
 } logFileNamesStruct;
 
+//
 typedef struct {
 	int queries;
 	int invalidqueries;
@@ -119,6 +137,7 @@ typedef struct {
 	int reply_IP;
 } countersStruct;
 
+//
 typedef struct {
 	bool socket_listenlocal;
 	bool query_display;
@@ -132,6 +151,8 @@ typedef struct {
 } ConfigStruct;
 
 // Dynamic structs
+//
+//
 typedef struct {
 	unsigned char magic;
 	int timestamp;
@@ -151,6 +172,7 @@ typedef struct {
 	int generation;
 } queriesDataStruct;
 
+//
 typedef struct {
 	unsigned char magic;
 	int count;
@@ -158,6 +180,7 @@ typedef struct {
 	char *name;
 } forwardedDataStruct;
 
+//
 typedef struct {
 	unsigned char magic;
 	int count;
@@ -165,6 +188,7 @@ typedef struct {
 	char *name;
 } clientsDataStruct;
 
+//
 typedef struct {
 	unsigned char magic;
 	int count;
@@ -174,6 +198,7 @@ typedef struct {
 	unsigned char dnssec;
 } domainsDataStruct;
 
+//
 typedef struct {
 	unsigned char magic;
 	int timestamp;
@@ -187,6 +212,7 @@ typedef struct {
 	int *clientdata;
 } overTimeDataStruct;
 
+//
 typedef struct {
 	int wildcarddomains;
 	int domainnames;
@@ -202,27 +228,31 @@ typedef struct {
 // Prepare timers, used mainly for debugging purposes
 #define NUMTIMERS 2
 enum { DATABASE_WRITE_TIMER, EXIT_TIMER };
-
+//
 enum { QUERIES, FORWARDED, CLIENTS, DOMAINS, OVERTIME, WILDCARD };
 enum { DNSSEC_UNSPECIFIED, DNSSEC_SECURE, DNSSEC_INSECURE, DNSSEC_BOGUS, DNSSEC_ABANDONED, DNSSEC_UNKNOWN };
 
 // Used to check memory integrity in various structs
 #define MAGICBYTE 0x57
 
+// Is this section different?
+//
 logFileNamesStruct files;
 FTLFileNamesStruct FTLfiles;
 countersStruct counters;
 ConfigStruct config;
-
+//
 queriesDataStruct *queries;
 forwardedDataStruct *forwarded;
 clientsDataStruct *clients;
 domainsDataStruct *domains;
 overTimeDataStruct *overTime;
-
+//
 FILE *logfile;
 volatile sig_atomic_t killed;
 
+// Is this section different?
+//
 char ** setupVarsArray;
 int setupVarsElements;
 
@@ -235,12 +265,12 @@ bool debugDB;
 bool threadwritelock;
 bool threadreadlock;
 unsigned char blockingstatus;
-
+//
 char ** wildcarddomains;
-
+///
 memoryStruct memory;
 bool runtest;
-
+//
 char * username;
 char timestamp[16];
 bool flush;

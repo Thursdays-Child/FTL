@@ -3,13 +3,30 @@
 *  Network-wide ad blocking via your own hardware.
 *
 *  FTL Engine
-*  Global definitions
+*  Global definitions - main.h
 *
 *  This file is copyright under the latest version of the EUPL.
 *  Please see LICENSE file for your rights under this license. */
 
+
+//
+// The beginning of the FTL program
+// FTL.h is the base of the FTL.c code 
+// FTL.c fields database data I/O requests via an API
+//
+// Program instructions are repeatedly scanned by a C interpreter, commands are
+// fed to the processing bus for the hardware to schedule for work / processor time,
+// provides results to other portions of the pi-hole project: performing calculations, 
+// storing / retrieving / maniuplating data, deciding on conditionals, user interface, etc
+//
+// These functions utilize the sqlite3.h to provide SQLite3 database functionality, and 
+// a wide variety of operating system, data handling, and networking function.h includes
+
+
+// #define _KEYWORD
 #define __USE_XOPEN
 #define _GNU_SOURCE
+// #include <code.h>
 #include <stdio.h>
 // variable argument lists
 #include <stdarg.h>
@@ -40,8 +57,15 @@
 #include "sqlite3.h"
 // tolower()
 #include <ctype.h>
+// Unix socket
+#include <sys/un.h>
+// Interfaces
+#include <ifaddrs.h>
+#include <net/if.h>
 
+// "Program Functions" / main.h's main.h?
 #include "routines.h"
+
 
 // Next we define the step size in which the struct arrays are reallocated if they
 // grow too large. This number should be large enough so that reallocation does not
@@ -51,12 +75,9 @@
 #define CLIENTSALLOCSTEP 10
 #define DOMAINSALLOCSTEP 1000
 #define OVERTIMEALLOCSTEP 100
-
+//
 #define SOCKETBUFFERLEN 1024
 
-// Maximum time from now until we will parse logs that are in the past [seconds]
-// Default: 86400 (24 hours)
-#define MAXLOGAGE 86400
 
 // How often do we garbage collect (to ensure we only have data fitting to the MAXLOGAGE defined above)? [seconds]
 // Default: 3600 (once per hour)
@@ -66,18 +87,25 @@
 // Default -60 (one minute before a full hour)
 #define GCdelay (-60)
 
+// How many client connection do we accept at once?
+#define MAXCONNS 20
+
+
 // Static structs
+//
+//
 typedef struct {
 	const char* conf;
 	const char* log;
 	const char* pid;
 	const char* port;
 	char* db;
+	const char* socketfile;
 } FTLFileNamesStruct;
 
+//
 typedef struct {
 	const char* log;
-	const char* log1;
 	const char* gravity;
 	const char* whitelist;
 	const char* blacklist;
@@ -87,6 +115,7 @@ typedef struct {
 	const char* dnsmasqconfig;
 } logFileNamesStruct;
 
+//
 typedef struct {
 	int queries;
 	int invalidqueries;
@@ -106,25 +135,30 @@ typedef struct {
 	int overTime;
 	int IPv4;
 	int IPv6;
-	int PTR;
-	int SRV;
 	int wildcarddomains;
 	int forwardedqueries;
+	int reply_NODATA;
+	int reply_NXDOMAIN;
+	int reply_CNAME;
+	int reply_IP;
 } countersStruct;
 
+//
 typedef struct {
 	bool socket_listenlocal;
-	bool include_yesterday;
-	bool rolling_24h;
 	bool query_display;
 	bool analyze_AAAA;
 	int maxDBdays;
 	bool resolveIPv6;
 	bool resolveIPv4;
 	int DBinterval;
+	int port;
+	int maxlogage;
 } ConfigStruct;
 
 // Dynamic structs
+//
+//
 typedef struct {
 	unsigned char magic;
 	int timestamp;
@@ -137,8 +171,14 @@ typedef struct {
 	int forwardID;
 	bool valid;
 	bool db;
+	// the ID is a (signed) int in dnsmasq, so no need for a long int here
+	int id;
+	bool complete;
+	unsigned char reply;
+	int generation;
 } queriesDataStruct;
 
+//
 typedef struct {
 	unsigned char magic;
 	int count;
@@ -146,6 +186,7 @@ typedef struct {
 	char *name;
 } forwardedDataStruct;
 
+//
 typedef struct {
 	unsigned char magic;
 	int count;
@@ -153,14 +194,17 @@ typedef struct {
 	char *name;
 } clientsDataStruct;
 
+//
 typedef struct {
 	unsigned char magic;
 	int count;
 	int blockedcount;
 	char *domain;
 	bool wildcard;
+	unsigned char dnssec;
 } domainsDataStruct;
 
+//
 typedef struct {
 	unsigned char magic;
 	int timestamp;
@@ -174,6 +218,7 @@ typedef struct {
 	int *clientdata;
 } overTimeDataStruct;
 
+//
 typedef struct {
 	int wildcarddomains;
 	int domainnames;
@@ -186,23 +231,34 @@ typedef struct {
 	int querytypedata;
 } memoryStruct;
 
+// Prepare timers, used mainly for debugging purposes
+#define NUMTIMERS 2
+enum { DATABASE_WRITE_TIMER, EXIT_TIMER };
+//
 enum { QUERIES, FORWARDED, CLIENTS, DOMAINS, OVERTIME, WILDCARD };
-enum { SOCKET };
+enum { DNSSEC_UNSPECIFIED, DNSSEC_SECURE, DNSSEC_INSECURE, DNSSEC_BOGUS, DNSSEC_ABANDONED, DNSSEC_UNKNOWN };
 
+// Used to check memory integrity in various structs
+#define MAGICBYTE 0x57
+
+// Is this section different?
+//
 logFileNamesStruct files;
 FTLFileNamesStruct FTLfiles;
 countersStruct counters;
 ConfigStruct config;
-
+//
 queriesDataStruct *queries;
 forwardedDataStruct *forwarded;
 clientsDataStruct *clients;
 domainsDataStruct *domains;
 overTimeDataStruct *overTime;
-
+//
 FILE *logfile;
 volatile sig_atomic_t killed;
 
+// Is this section different?
+//
 char ** setupVarsArray;
 int setupVarsElements;
 
@@ -215,12 +271,12 @@ bool debugDB;
 bool threadwritelock;
 bool threadreadlock;
 unsigned char blockingstatus;
-
+//
 char ** wildcarddomains;
-
+///
 memoryStruct memory;
 bool runtest;
-
+//
 char * username;
 char timestamp[16];
 bool flush;
@@ -231,3 +287,6 @@ long int lastdbindex;
 bool travis;
 bool DBdeleteoldqueries;
 bool rereadgravity;
+long int lastDBimportedtimestamp;
+bool ipv4telnet, ipv6telnet;
+bool istelnet[MAXCONNS];

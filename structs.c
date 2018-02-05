@@ -15,12 +15,12 @@ FTLFileNamesStruct FTLfiles = {
 	"/var/log/pihole-FTL.log",
 	"/var/run/pihole-FTL.pid",
 	"/var/run/pihole-FTL.port",
-	NULL
+	NULL,
+	"/var/run/pihole/FTL.sock"
 };
 
 logFileNamesStruct files = {
 	"/var/log/pihole.log",
-	"/var/log/pihole.log.1",
 	"/etc/pihole/list.preEventHorizon",
 	"/etc/pihole/whitelist.txt",
 	"/etc/pihole/blacklist.txt",
@@ -119,6 +119,8 @@ void memory_check(int which)
 		break;
 		default:
 			/* That cannot happen */
+			logg("Fatal error in memory_check(%i)", which);
+			exit(EXIT_FAILURE);
 		break;
 	}
 }

@@ -23,10 +23,23 @@
 // a wide variety of operating system, data handling, and networking function.h includes
 
 
-// #define _KEYWORD
+
+
+// Reference: https://stackoverflow.com/questions/25090635/use-and-in-c-programs
+// & https://stackoverflow.com/questions/9695182/understanding-glibc-source-code-conventions
+// "The essence of the convention is to reserve :
+//    naming starting with _ for the language entities, which includes the standard library
+//    naming starting with __ for the compiler internals..."
+//
+// Reference: https://mail.python.org/pipermail/python-list/1999-June/016130.html
 #define __USE_XOPEN
+// Reference: https://stackoverflow.com/questions/5582211/what-does-define-gnu-source-imply
+// & https://www.spinics.net/lists/linux-man/msg01743.html
 #define _GNU_SOURCE
-// #include <code.h>
+
+// Reference: https://www.tutorialspoint.com/c_standard_library/
+// #include Standard C Libraries as <code.h>
+//
 #include <stdio.h>
 // variable argument lists
 #include <stdarg.h>

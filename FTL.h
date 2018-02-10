@@ -11,8 +11,8 @@
 
 //
 // The beginning of the FTL program
-// FTL.h is the base of the FTL.c code 
-// FTL.c fields database data I/O requests via an API
+// FTL.h is the base of the main.c code 
+// main.c fields database data I/O requests via an API
 //
 // Program instructions are repeatedly scanned by a C interpreter, commands are
 // fed to the processing bus for the hardware to schedule for work / processor time,
@@ -76,7 +76,7 @@
 #include <ifaddrs.h>
 #include <net/if.h>
 
-// "Program Functions" / main.h's main.h?
+// Pi-hole program subroutines outside of the database aspect, but still necessary to the project
 #include "routines.h"
 
 

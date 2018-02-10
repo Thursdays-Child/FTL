@@ -12,6 +12,7 @@
 //
 // The beginning of the FTL program
 // FTL.h is the base of the main.c code 
+// and sets up the basic software structures to work Pi-hole data with SQLite3 databases
 // main.c fields database data I/O requests via an API
 //
 // Program instructions are repeatedly scanned by a C interpreter, commands are
